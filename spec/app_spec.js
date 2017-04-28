@@ -57,15 +57,75 @@ describe('App', () => {
     request.get(apiUrlFor('nouns'), (err, res, body) => {
       let nouns = j(body);
       expect(nouns.length).toEqual(10);
-      done(); 
+      done();
     });
   });
 
   it('returns a given amount of nouns', done => {
-    request.get(apiUrlFor('nouns', {count: 30}), (err, res, body) => {
+    request.get(apiUrlFor('nouns', { count: 30 }), (err, res, body) => {
       let nouns = j(body);
       expect(nouns.length).toEqual(30);
-      done(); 
+      done();
     });
+  });
+
+  it('returns an array of 10 adjectives', done => {
+    request.get(apiUrlFor('adjectives'), (err, res, body) => {
+      let adjectives = j(body);
+      expect(adjectives.length).toEqual(10);
+      done();
+    });
+  });
+
+  it('returns a given amount of adjectives', done => {
+    request.get(apiUrlFor('adjectives', { count: 14 }), (err, res, body) => {
+      let adjectives = j(body);
+      expect(adjectives.length).toEqual(14);
+      done();
+    });
+  });
+
+  it('returns an array of 10 adverbs', done => {
+    request.get(apiUrlFor('adverbs'), (err, res, body) => {
+      let adverbs = j(body);
+      expect(adverbs.length).toEqual(10);
+      done();
+    });
+  });
+
+  it('returns a given amount of adverbs', done => {
+    request.get(apiUrlFor('adverbs', { count: 19 }), (err, res, body) => {
+      let adverbs = j(body);
+      expect(adverbs.length).toEqual(19);
+      done();
+    });
+  });
+
+  it('returns an array of 10 verbs', done => {
+    request.get(apiUrlFor('verbs'), (err, res, body) => {
+      let verbs = j(body);
+      expect(verbs.length).toEqual(10);
+      done();
+    });
+  });
+
+  it('returns a given amount of adverbs', done => {
+    request.get(apiUrlFor('verbs', { count: 22 }), (err, res, body) => {
+      let verbs = j(body);
+      expect(verbs.length).toEqual(22);
+      done();
+    });
+  });
+
+  it('returns a string where {{noun}} is replaced with provided noun', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      { form: { text: 'This is a {{noun}}', words: ['cat'] } },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        expect(madlib).toEqual('This is a cat');
+        done();
+      }
+    );
   });
 });
