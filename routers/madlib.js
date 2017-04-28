@@ -38,36 +38,40 @@ router.get('/verbs', (req, res) => {
 });
 
 router.post('/madlib', async (req, res) => {
-  let words = req.body.words.join(" ");
+  let words = req.body.words.join(' ');
   let text = req.body.text;
 
   let nouns = await wordpos.getNouns(words);
+  if (nouns.length == 0) nouns = ['*No applicable nouns provided!*'];
+
   let adjectives = await wordpos.getAdjectives(words);
+  if (adjectives.length == 0)
+    adjectives = ['*No applicable adjectives provided!*'];
+
   let verbs = await wordpos.getVerbs(words);
+  if (verbs.length == 0) verbs = ['*No applicable verbs provided!*'];
+
   let adverbs = await wordpos.getAdverbs(words);
+  if (adverbs.length == 0) adverbs = ['*No applicable adverbs provided!*'];
 
   Sentencer.configure({
-    // the list of nouns to use. Sentencer provides its own if you don't have one!
     nounList: nouns,
-
-    // the list of adjectives to use. Again, Sentencer comes with one!
     adjectiveList: adjectives,
- 
+
     actions: {
-      verb : function() {
+      verb: function() {
         let numVerbs = verbs.length;
         return verbs[Math.floor(Math.random() * numVerbs)];
       },
-      adverb : function() {
+      adverb: function() {
         let numAdverbs = adverbs.length;
         return adverbs[Math.floor(Math.random() * numAdverbs)];
-      }      
+      }
     }
   });
 
-  let madlib = { data: Sentencer.make(text)};
+  let madlib = { data: Sentencer.make(text) };
   res.status(200).json(madlib);
-
 });
 
 module.exports = router;

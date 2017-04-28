@@ -141,7 +141,7 @@ describe('App', () => {
         done();
       }
     );
-  });  
+  });
 
   it('returns a string where {{verb}} is replaced with provided verb', done => {
     request.post(
@@ -159,7 +159,12 @@ describe('App', () => {
   it('returns a string where {{adverb}} is replaced with provided adverb', done => {
     request.post(
       apiUrlFor('madlib'),
-      { form: { text: 'This cute cat likes to cook {{adverb}}', words: ['aggressively'] } },
+      {
+        form: {
+          text: 'This cute cat likes to cook {{adverb}}',
+          words: ['aggressively']
+        }
+      },
       (err, res, body) => {
         let madlib = j(body).data;
         console.log(madlib);
@@ -167,5 +172,43 @@ describe('App', () => {
         done();
       }
     );
-  });  
+  });
+
+  it('returns a string where all parts of speech are replaced with given parts of speech', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      {
+        form: {
+          text: 'This {{adjective}} {{noun}} likes to {{verb}} {{adverb}}',
+          words: ['aggressively', 'cute', 'cat', 'cook']
+        }
+      },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        console.log(madlib);
+        expect(madlib).toEqual('This cute cat likes to cook aggressively');
+        done();
+      }
+    );
+  });
+
+  it('returns an error where a text is provided without applicable correct words', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      {
+        form: {
+          text: 'This cute cat likes to cook {{adverb}}',
+          words: ['bananas']
+        }
+      },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        console.log(madlib);
+        expect(madlib).toEqual(
+          'This cute cat likes to cook *No applicable adverbs provided!*'
+        );
+        done();
+      }
+    );
+  });
 });
