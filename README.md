@@ -33,7 +33,7 @@ JSON [15 nouns]
 
 /adjectives
 
-/madlib?sentence="something {{noun}} something {{verb}}"
+/madlib?text="something *noun* something *verb*"&words="stab,blue,horse"
 
-User: Viking code school makes me want to (verb) a (adjective) (noun)
-Server: Viking code school makes me want to STAB a BLUE HOUSE
+User: /madlib/text="Viking code school makes me want to *verb* a *adjective* *noun*"&words="stab,blue,horse"
+Server: {"data": "Viking code school makes me want to STAB a BLUE HOUSE"}
