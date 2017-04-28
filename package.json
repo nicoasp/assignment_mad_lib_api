@@ -1,0 +1,38 @@
+{
+  "name": "assignment_mad_lib_api",
+  "version": "1.0.0",
+  "description": "Serving up the madness with a Mad Lib API!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "console": "node repl.js",
+    "c": "node repl.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Throw22/assignment_mad_lib_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Throw22/assignment_mad_lib_api/issues"
+  },
+  "homepage": "https://github.com/Throw22/assignment_mad_lib_api#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "cli-highlight": "^1.1.4",
+    "cookie-session": "^2.0.0-beta.1",
+    "express": "^4.15.2",
+    "express-flash-messages": "^0.1.1",
+    "express-handlebars": "^3.0.0",
+    "jasmine": "^2.6.0",
+    "md5": "^2.2.1",
+    "mongoose": "^4.9.6",
+    "mongoose-unique-validator": "^1.0.5",
+    "morgan": "^1.8.1",
+    "uuid": "^3.0.1"
+  }
+}
