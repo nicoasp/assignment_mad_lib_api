@@ -40,6 +40,8 @@ router.get('/verbs', (req, res) => {
 router.post('/madlib', async (req, res) => {
   let words = req.body.words.join(' ');
   let text = req.body.text;
+  console.log("Request text: ", text);
+  console.log("Request words: ", words);
 
   let nouns = await wordpos.getNouns(words);
   if (nouns.length == 0) nouns = ['*No applicable nouns provided!*'];
