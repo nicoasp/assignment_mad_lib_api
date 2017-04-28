@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 
-
 // ----------------------------------------
 // App Locals
 // ----------------------------------------
@@ -10,39 +9,34 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ----------------------------------------
 // Body Parser
 // ----------------------------------------
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 // ----------------------------------------
 // Sessions/Cookies
 // ----------------------------------------
 const cookieSession = require('cookie-session');
 
-app.use(cookieSession({
-  name: 'session',
-  keys: [
-    process.env.SESSION_SECRET || 'asdf1234567890qwer'
-  ]
-}));
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: [process.env.SESSION_SECRET || 'asdf1234567890qwer']
+  })
+);
 
 app.use((req, res, next) => {
   app.locals.session = req.session;
   next();
 });
 
-
 // ----------------------------------------
 // Flash Messages
 // ----------------------------------------
 const flash = require('express-flash-messages');
 app.use(flash());
-
-
 
 // ----------------------------------------
 // Referrer
@@ -52,12 +46,10 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ----------------------------------------
 // Public
 // ----------------------------------------
-app.use(express.static(`${ __dirname }/public`));
-
+app.use(express.static(`${__dirname}/public`));
 
 // ----------------------------------------
 // Logging
@@ -75,11 +67,13 @@ let format = [
   ':status ',
   ':res[content-length] ',
   '- :response-time ms',
-  ':newline', ':newline',
+  ':newline',
+  ':newline',
   ':data',
   ':newline',
   ':separator',
-  ':newline', ':newline',
+  ':newline',
+  ':newline'
 ].join('');
 
 // Use morgan middleware with
@@ -90,7 +84,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Helper tokens
 morgan.token('separator', () => '****');
-morgan.token('newline', () => "\n");
+morgan.token('newline', () => '\n');
 
 // Set data token to output
 // req query params and body
@@ -100,20 +94,19 @@ morgan.token('data', (req, res, next) => {
   }
 
   let data = [];
-  ['query', 'params', 'body', 'session', 'user'].forEach((key) => {
+  ['query', 'params', 'body', 'session', 'user'].forEach(key => {
     if (req[key]) {
       let capKey = key[0].toUpperCase() + key.substr(1);
       let value = JSON.stringify(req[key], null, 2);
-      data.push(`${ capKey }: ${ value }`);
+      data.push(`${capKey}: ${value}`);
     }
   });
   data = highlight(data.join('\n'), {
     language: 'json',
     ignoreIllegals: true
   });
-  return `${ data }`;
+  return `${data}`;
 });
-
 
 // ----------------------------------------
 // Mongoose
@@ -127,25 +120,25 @@ app.use((req, res, next) => {
   }
 });
 
-
 // ----------------------------------------
 // Services
 // ----------------------------------------
 const authService = require('./services/auth');
 const User = require('./models').User;
 
-app.use(authService({
-  findUserByEmail: (email) => {
-    return User.findOne({ email: email });
-  },
-  findUserByToken: (token) => {
-    return User.findOne({ token: token });
-  },
-  validateUserPassword: (user, password) => {
-    return user.validatePassword(password);
-  }
-}));
-
+app.use(
+  authService({
+    findUserByEmail: email => {
+      return User.findOne({ email: email });
+    },
+    findUserByToken: token => {
+      return User.findOne({ token: token });
+    },
+    validateUserPassword: (user, password) => {
+      return user.validatePassword(password);
+    }
+  })
+);
 
 // ----------------------------------------
 // Routes
@@ -153,7 +146,8 @@ app.use(authService({
 const usersRouter = require('./routers/users');
 app.use('/', usersRouter);
 
-
+const apiRouter = require('./routers/madlib');
+app.use('/api/v1', apiRouter);
 
 // ----------------------------------------
 // Template Engine
@@ -161,43 +155,33 @@ app.use('/', usersRouter);
 const expressHandlebars = require('express-handlebars');
 const helpers = require('./helpers');
 
-
 const hbs = expressHandlebars.create({
   helpers: helpers.registered,
   partialsDir: 'views/',
   defaultLayout: 'application'
 });
 
-
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-
 
 // ----------------------------------------
 // Server
 // ----------------------------------------
-const port = process.env.PORT ||
-  process.argv[2] ||
-  3000;
+const port = process.env.PORT || process.argv[2] || 3000;
 const host = 'localhost';
 
-
 let args;
-process.env.NODE_ENV === 'production' ?
-  args = [port] :
-  args = [port, host];
+process.env.NODE_ENV === 'production' ? (args = [port]) : (args = [port, host]);
 
 args.push(() => {
-  console.log(`Listening: http://${ host }:${ port }\n`);
+  console.log(`Listening: http://${host}:${port}\n`);
 });
-
 
 // If we're running this file directly
 // start up the server
 if (require.main === module) {
   app.listen.apply(app, args);
 }
-
 
 // ----------------------------------------
 // Error Handling
@@ -213,7 +197,6 @@ app.use('/api', (err, req, res, next) => {
   res.status(500).json({ error: err });
 });
 
-
 app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
@@ -224,8 +207,5 @@ app.use((err, req, res, next) => {
   }
   res.status(500).render('errors/500', { error: err });
 });
-
-
-
 
 module.exports = app;
