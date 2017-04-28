@@ -123,9 +123,49 @@ describe('App', () => {
       { form: { text: 'This is a {{noun}}', words: ['cat'] } },
       (err, res, body) => {
         let madlib = j(body).data;
+        console.log(madlib);
         expect(madlib).toEqual('This is a cat');
         done();
       }
     );
   });
+
+  it('returns a string where {{adjective}} is replaced with provided adjective', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      { form: { text: 'This is a {{adjective}} cat', words: ['cute'] } },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        console.log(madlib);
+        expect(madlib).toEqual('This is a cute cat');
+        done();
+      }
+    );
+  });  
+
+  it('returns a string where {{verb}} is replaced with provided verb', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      { form: { text: 'This cute cat likes to {{verb}}', words: ['cook'] } },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        console.log(madlib);
+        expect(madlib).toEqual('This cute cat likes to cook');
+        done();
+      }
+    );
+  });
+
+  it('returns a string where {{adverb}} is replaced with provided adverb', done => {
+    request.post(
+      apiUrlFor('madlib'),
+      { form: { text: 'This cute cat likes to cook {{adverb}}', words: ['aggressively'] } },
+      (err, res, body) => {
+        let madlib = j(body).data;
+        console.log(madlib);
+        expect(madlib).toEqual('This cute cat likes to cook aggressively');
+        done();
+      }
+    );
+  });  
 });

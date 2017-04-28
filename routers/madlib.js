@@ -37,26 +37,37 @@ router.get('/verbs', (req, res) => {
   });
 });
 
-router.post('/madlib', (req, res) => {
-  let words = req.body.words;
+router.post('/madlib', async (req, res) => {
+  let words = req.body.words.join(" ");
   let text = req.body.text;
+
+  let nouns = await wordpos.getNouns(words);
+  let adjectives = await wordpos.getAdjectives(words);
+  let verbs = await wordpos.getVerbs(words);
+  let adverbs = await wordpos.getAdverbs(words);
 
   Sentencer.configure({
     // the list of nouns to use. Sentencer provides its own if you don't have one!
-    nounList: [],
+    nounList: nouns,
 
     // the list of adjectives to use. Again, Sentencer comes with one!
-    adjectiveList: [],
-
-    // additional actions for the template engine to use.
-    // you can also redefine the preset actions here if you need to.
-    // See the "Add your own actions" section below.
+    adjectiveList: adjectives,
+ 
     actions: {
-      my_action: function() {
-        return 'something';
-      }
+      verb : function() {
+        let numVerbs = verbs.length;
+        return verbs[Math.floor(Math.random() * numVerbs)];
+      },
+      adverb : function() {
+        let numAdverbs = adverbs.length;
+        return adverbs[Math.floor(Math.random() * numAdverbs)];
+      }      
     }
   });
+
+  let madlib = { data: Sentencer.make(text)};
+  res.status(200).json(madlib);
+
 });
 
 module.exports = router;
