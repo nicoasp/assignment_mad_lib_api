@@ -7,7 +7,15 @@ const helpers = require('./../helpers');
 const h = helpers.registered;
 const Sentencer = require('sentencer');
 const WordPOS = require('wordpos');
+const wordpos = new WordPOS();
 
 router.get('/nouns', (req, res) => {
-  //new instance of sentencer, use sentencer.make to create list of 10 nouns unless count is passed
+  count = req.query.count || 10;
+  wordpos.randNoun({ count }, (result) => {
+  	res.status(200).json(result);
+  })
 });
+
+
+
+module.exports = router;

@@ -3,6 +3,8 @@ const request = require('request');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const qs = require('qs');
+const WordPOS = require('wordpos');
+const wordpos = new WordPOS();
 
 describe('App', () => {
   const baseUrl = 'http://localhost:8888';
@@ -46,7 +48,6 @@ describe('App', () => {
   it('renders the home page', done => {
     request.get(baseUrl, (err, res, body) => {
       expect(res.statusCode).toBe(200);
-      console.log(body);
       expect(body).toMatch(/api/i);
       done();
     });
@@ -55,9 +56,16 @@ describe('App', () => {
   it('returns an array of 10 nouns', done => {
     request.get(apiUrlFor('nouns'), (err, res, body) => {
       let nouns = j(body);
-      console.log(nouns);
-      expect(result.length).toEqual(10);
-      done();
+      expect(nouns.length).toEqual(10);
+      done(); 
+    });
+  });
+
+  it('returns a given amount of nouns', done => {
+    request.get(apiUrlFor('nouns', {count: 30}), (err, res, body) => {
+      let nouns = j(body);
+      expect(nouns.length).toEqual(30);
+      done(); 
     });
   });
 });
