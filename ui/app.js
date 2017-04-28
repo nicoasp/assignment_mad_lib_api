@@ -2,10 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const request = require('request');
+const User = require('../models/user');
 const j = str => {
   return JSON.parse(str);
 };
-const token = require('./token');
 
 app.use(
   bodyParser.urlencoded({
@@ -27,9 +27,11 @@ app.get('/', (req, res) => {
   res.render('madlib');
 });
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
   let text = req.body.text;
   let words = req.body.words.trim();
+  // let user = await User.find({ email: 'foobar@gmail.com' });
+  let token = '72bbe575b96e251bbde09e5702becfa5';
   words = words.split(', ');
   request.post(
     'http://localhost:3000/api/v1/madlib',

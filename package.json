@@ -9,7 +9,8 @@
     "whichnodemon": "which nodemon > /dev/null",
     "console": "node repl.js",
     "c": "node repl.js",
-    "jasmine": "./node_modules/jasmine/bin/jasmine.js"
+    "jasmine": "./node_modules/jasmine/bin/jasmine.js",
+    "seed": "node seeds"
   },
   "repository": {
     "type": "git",
